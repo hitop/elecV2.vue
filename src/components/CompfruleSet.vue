@@ -1,11 +1,55 @@
 <template>
-	<div id="fruleSetInfo"><ul class="csfMenu"><li @click="save">保存 - <small>当前规则总行 </small><i>{{ rules.length }}</i></li></ul><div id="fruleTable"><table cellspacing="0" cellpadding="0"><thead><tr><th class="csfixedtbwidth">匹配方式</th><th>匹配内容</th><th class="csfixedtbwidth">分流规则</th><th class="csfixedtbwidth">操作</th></tr></thead><tbody><tr v-for="(rule, ind) in editrules" :key="ind"><td name="nmMrule"><select v-model="rule[0]"><option value="key">关键字</option><option value="domain">子域名</option><option value="ip">IP</option></select></td><td name="nmMcont"><input v-model="rule[1]"></td><td name="nmOutbt"><select v-model="rule[2]"><option value="proxy">代理</option><option value="direct">直连</option><option value="block">阻止</option></select></td><td class="csaction"><span @click="deltbrule(ind)"><span class="cslittlebutton icon-delete"></span></span><span @click="copytbrule(ind)"><span class="cslittlebutton icon-copy"></span></span></td></tr></tbody><tfoot><tr><td colspan="4" @click="addRuleTotable">+</td></tr><tr><td colspan="4"><p class="tip" @click="addRulesToView">⇓⬇⇓ 添加到路由规则 ⇓⬇⇓</p></td></tr></tfoot></table><p class="cspage"></p></div><div id="idrulescont"><textarea v-model="strrules"></textarea></div></div>
+	<div id="fruleSetInfo">
+	<ul class="csfMenu">
+		<li @click="save">保存 - <small>当前规则总行 </small><i>{{ rules.length }}</i></li>
+	</ul>
+	<div id="fruleTable" class="sInfoMtop">
+		<table cellspacing="0" cellpadding="0">
+			<thead>
+				<tr>
+					<th class="csfixedtbwidth">匹配方式</th>
+					<th>匹配内容</th>
+					<th class="csfixedtbwidth">分流规则</th>
+					<th class="csfixedtbwidth">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(rule, ind) in editrules" :key="ind">
+					<td name="nmMrule"><select v-model="rule[0]">
+							<option value="key">关键字</option>
+							<option value="domain">子域名</option>
+							<option value="ip">IP</option>
+						</select></td>
+					<td name="nmMcont"><input v-model="rule[1]"></td>
+					<td name="nmOutbt"><select v-model="rule[2]">
+							<option value="proxy">代理</option>
+							<option value="direct">直连</option>
+							<option value="block">阻止</option>
+						</select></td>
+					<td class="csaction"><span @click="deltbrule(ind)"><span class="cslittlebutton icon-delete"></span></span><span @click="copytbrule(ind)"><span class="cslittlebutton icon-copy"></span></span></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="4" @click="addRuleTotable">+</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<p class="tip" @click="addRulesToView">⇓⬇⇓ 添加到路由规则 ⇓⬇⇓</p>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<p class="cspage"></p>
+	</div>
+	<div id="idrulescont"><textarea v-model="strrules"></textarea></div>
+</div>
 </template>
 
 <script>
 export default {
 	name: 'CompfruleSet',
-	data: function(){
+	data(){
 		return {
 			rules: this.$root.gConf.routing,
 			editrules: []
@@ -13,28 +57,28 @@ export default {
 	},
 	computed: {
 		strrules: {
-			get: function() {
+			get() {
 				return this.rules.join("\n")
 			},
-			set: function(newValue) {
+			set(newValue) {
 				this.rules = newValue.split(/\n|\r/)
 			}
 		}
 	},
 	methods: {
-		addRuleTotable: function(rule, ind=false) {
+		addRuleTotable(rule, ind=false) {
 			if (rule) rule = this.clarifyRule(rule)
 			if (!rule) rule = ["domain","","proxy"]
 			if (typeof(ind) == "number") this.editrules.splice(ind+1, 0, rule)
 			else this.editrules.push(rule)
 		},
-		deltbrule: function(ind){
+		deltbrule(ind){
 			this.editrules.splice(ind,1)
 		},
-		copytbrule: function(ind){
+		copytbrule(ind){
 			this.addRuleTotable(this.editrules[ind].join(","), ind)
 		},
-		addRulesToView: function() {
+		addRulesToView() {
 			let tmpr=[]
 			this.editrules.forEach(rule=>{
 				tmpr.push(rule.join(","))
@@ -42,7 +86,7 @@ export default {
 			this.strrules = tmpr.join("\n") + "\n" + this.strrules
 			this.editrules = []
 		},
-		clarifyRule: function(rule) {
+		clarifyRule(rule) {
 			let tmpr = rule.toString().replace(/\s/g, '').split(",")
 			if (tmpr.length!=3) return false
 			if (/domain/i.test(tmpr[0])) tmpr[0] = "domain"
@@ -71,11 +115,11 @@ export default {
 
 			return tmpr
 		},
-		isrepeat: function(rule) {
+		isrepeat(rule) {
 			if (this.rules.indexOf(rule.toString())==-1) return false
 			else return true
 		},
-		push: function(prules, empty=false) {
+		push(prules, empty=false) {
 			// 添加规则到 gConf, string 单条规则，array 规则组: ["key,netifly,proxy","domain,ab.com,proxy"]
 			if (empty) this.rules = []
 			let leng = 0
@@ -96,13 +140,13 @@ export default {
 			}
 			return leng
 		},
-		addGrules: function (group, tag="proxy", type="key") {
+		addGrules(group, tag="proxy", type="key") {
 			// 批量添加到分组, group 为内容组，比如 [a.com,b.com,google,facebook]
 			for (let rule of group) {
 				this.push(`${type},${rule},${tag}`)
 			}
 		},
-		distinct: function() {
+		distinct() {
 			// 规则去重
 			let result = []
 			let obj = {}
@@ -115,7 +159,7 @@ export default {
 			}
 			this.rules = result
 		},
-		save: function() {
+		save() {
 			this.distinct()
 			this.$root.saveGconf()
 			this.$root.alertElec("去掉重复及错误，总保存分流规则 " + this.rules.length)
@@ -123,3 +167,83 @@ export default {
 	}
 }
 </script>
+
+<style>
+/******* 分流表格样式 ***********/
+#fruleTable table {
+	width: 608px;
+	border-radius: 8px;
+	border: 1px solid;
+}
+
+#fruleTable th {
+	text-align: center;
+	box-sizing: border-box;
+	border: 1px solid;
+	background: #999;
+	font-size: 22px;
+	padding: 6px;
+}
+
+#fruleTable tr td {
+	border: 1px solid;
+	border-top: none;
+	box-sizing: border-box;
+	padding: 4px 8px;
+	height: 46px;
+}
+
+#fruleTable tr th:first-child {
+	border-top-left-radius: 8px;
+}
+
+#fruleTable tr th:last-child {
+	border-top-right-radius: 8px;
+}
+
+#fruleTable tr th.csfixedtbwidth {
+	width: 120px;
+}
+
+#fruleTable td.csaction {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	padding: 0;
+}
+
+#fruleTable table td select, #fruleTable table td input {
+	width: 100%;
+	font-size: 18px;
+	height: 32px;
+	line-height: 32px;
+	padding: 0px 8px;
+}
+
+#fruleTable tfoot tr td {
+	border-radius: 0 0 8px 8px;
+	text-align: center;
+	font-size: 22px;
+	height: 30px;
+	padding: 0;
+	cursor: pointer;
+}
+
+#fruleTable td.csaction > span {
+	padding: 0px 5px;
+	border: 1px solid;
+	border-radius: 4px;
+	height: 30px;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+#idrulescont textarea {
+	width: 608px;
+	height: 400px;
+	text-align: left;
+	font-size: 22px;
+	line-height: 32px;
+	background-size: 100% 32px;
+}
+</style>

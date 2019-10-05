@@ -1,5 +1,14 @@
 <template>
-	<div id="subrsSetInfo"><ul id="idsublist"><li v-for="(rs, rid) in subrs" :key="rid" :id="rid" @click="upsubrules" @mouseleave="isupdatesub=''">{{ rs.name + isupdatesub }}<span>{{ rs.numb }}</span></li></ul><div class="sInfoMtop"><p><b>订阅链接</b><input name="suburl" v-model="subrurl"></p><p><b>订阅名字</b><input name="name" v-model="subrname"></p><p class="longButton center"><button @click="addSuburl()">添加订阅</button></p></div></div>
+	<div id="subrsSetInfo">
+	<div id="idsublist">
+		<ul><li v-for="(rs, rid) in subrs" :key="rid" :id="rid" @click="upsubrules" @mouseleave="isupdatesub=''">{{ rs.name + isupdatesub }}</li></ul><span>{{ rs.numb }}</span>
+	</div>
+	<div class="sInfoMtop">
+		<p><b>订阅链接</b><input name="suburl" v-model="subrurl"></p>
+		<p><b>订阅名字</b><input name="name" v-model="subrname"></p>
+		<p class="longButton center"><button @click="addSuburl()">添加订阅</button></p>
+	</div>
+</div>
 </template>
 
 <script>
@@ -15,9 +24,10 @@ export default {
 		}
 	},
 	methods: {
-		upsubrules: function(event) {
+		upsubrules(event) {
 			// 更新规则
 			if (this.isupdatesub) {
+				this.isupdatesub = ''
 				event.target.classList.add("waitdot")
 				let rid = event.target.id
 				let url = this.subrs[rid].surl
@@ -35,7 +45,7 @@ export default {
 				this.isupdatesub = " - 再次点击更新此订阅"
 			}
 		},
-		addSuburl: function() {
+		addSuburl() {
 			// 添加订阅链接
 			if (this.subrurl && this.subrname) {
 				let sid = this.$root.newElecId()
@@ -46,7 +56,7 @@ export default {
 				this.$root.alertElec("输入不能为空")
 			}
 		},
-		clarifyRule: function(rule) {
+		clarifyRule(rule) {
 			let tmpr = rule.toString().replace(/\s/g, '').split(",")
 			if (tmpr.length!=3) return false
 			if (/domain/i.test(tmpr[0])) tmpr[0] = "domain"
@@ -75,11 +85,11 @@ export default {
 
 			return tmpr
 		},
-		isrepeat: function(rule) {
+		isrepeat(rule) {
 			if (this.rules.indexOf(rule.toString())==-1) return false
 			else return true
 		},
-		push: function(prules, empty=false) {
+		push(prules, empty=false) {
 			// 添加规则到 gConf, string 单条规则，array 规则组: ["key,netifly,proxy","domain,ab.com,proxy"]
 			if (empty) this.rules = []
 			let leng = 0
@@ -103,3 +113,26 @@ export default {
 	}
 }
 </script>
+
+<style>
+#subrsSetInfo ul li {
+	text-align: center;
+	box-sizing: border-box;
+	border-radius: 10px;
+	width: 80%;
+	margin: 12px auto;
+	padding: 12px;
+	word-break: break-all;
+	font-weight: bold;
+	font-size: 20px;
+	cursor: pointer;
+	position: relative;
+}
+
+#subrsSetInfo ul li span {
+	font-size: 12px;
+	line-height: 30px;
+	position: absolute;
+	right: 10px;
+}
+</style>

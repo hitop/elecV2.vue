@@ -63,7 +63,7 @@ export default {
 		}
 	},
 	methods: {
-		saveadvanSet: function(){
+		saveadvanSet(){
 			this.outBset.concurrency = Number(this.outBset.concurrency)
 			if ((this.outBset.outborder[0] == this.outBset.outborder[1]) || (this.outBset.routorder[0] == this.outBset.routorder[1])) {
 				this.$root.alertElec("出站或路由规则请不要选择相同值")
@@ -86,3 +86,11 @@ export default {
 	}
 }
 </script>
+
+<style>
+#advanSetInfo #idtbcs input[type=checkbox], #advanSetInfo .cskcpset input[type=checkbox] {margin-right: 40px}
+
+#advanSetInfo .csoutbset p select {
+  margin-right: 68px;
+}
+</style>

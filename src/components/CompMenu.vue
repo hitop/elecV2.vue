@@ -5,7 +5,7 @@
 <script>
 export default {
 	name: 'CompMenu',
-  data: function(){
+  data(){
     return {
       axis: [0, 0]
     }
@@ -13,7 +13,7 @@ export default {
 	props: ['menus', 'axis'],
 	template: ``,
 	computed: {
-		fmenus: function(){
+		fmenus(){
 			var fselect = {}
 			if (typeof(this.tags.length) == "number") {
 				this.tags.forEach(el=>fselect[el]=el)

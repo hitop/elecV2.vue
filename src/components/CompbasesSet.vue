@@ -25,7 +25,7 @@
 			<p><b>是否随机</b><input type="checkbox" name="isRandsub" v-model="evset.isRandsub">
 				<p class="tip">* 一些免费订阅链接可能包含上百个服务器，根本用不了那么多，还占位置，选择起来也麻烦。</p>
 		</div>
-		<div class="wzborder csevset"><span class="mtitle">本程序相关</span>
+		<div id="idevset" class="wzborder csevset"><span class="mtitle">本程序相关</span>
 			<p><input name="isLocalStorage" type="checkbox" v-model="evset.isLocalStorage"><span>启用 localStorage</span></p>
 			<p><input name="runonStart" type="checkbox" v-model="evset.runonStart"><span>启动时运行 v2ray</span></p>
 			<p><input name="isResize" type="checkbox" v-model="evset.isResize"><span>收缩已隐藏的透明界面</span></p>
@@ -48,16 +48,16 @@ export default {
 	},
 	computed: {
 		dns: {
-			get: function(){
+			get(){
 				return this.gdns.join(",")
 			},
-			set: function(newValue){
+			set(newValue){
 				this.gdns = newValue.split(",")
 			}
 		}
 	},
 	methods: {
-		saveBset: function(){
+		saveBset(){
 			if (this.inbound.sport == this.inbound.hport) {
 				this.$root.alertElec("http 和 socks 代理端口冲突")
 				return false
@@ -77,3 +77,7 @@ export default {
 	}
 }
 </script>
+
+<style>
+#idevset{padding: 0 20px}
+</style>

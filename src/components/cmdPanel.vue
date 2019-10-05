@@ -17,12 +17,12 @@ export default {
 		}
 	},
 	computed: {
-		resultsshow: function(){
+		resultsshow(){
 			return this.results.join("<br>")
 		}
 	},
 	methods: {
-		run: function(e){
+		run(e){
 			if (e.which === 13) {
 				if (this.current == "") return false
 				this.results.unshift(">> " + this.current)
@@ -55,3 +55,22 @@ export default {
 	}
 }
 </script>
+
+<style>
+#cmd input{
+	border: none;
+	height: 36px;
+	width: 100%;
+	box-sizing: border-box;
+	padding-left: 8px;
+	font-size: 22px;
+}
+#cmd input:focus,#cmd input:active{outline: none}
+#consoleout{
+	font-size: 20px;
+	overflow-y: auto;
+	word-break: break-all;
+	padding: 0 12px;
+	box-sizing: border-box;
+}
+</style>

@@ -27,7 +27,7 @@ export default {
     elecV2Set
   },
   methods: {
-    setShow: function(){
+    setShow(){
       if (this.currentpanel == "elecV2Ser") {
         this.currentpanel = "elecV2Set"
       } else {

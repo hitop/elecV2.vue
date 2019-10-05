@@ -1,8 +1,10 @@
 # *原来是一个基于 electron/nodejs 的客户端，学习 vue , 新开的一个网页版*
 
-基础功能：导入 vmess/ss 或者订阅链接，生成 config.json 文件，下载替换原 v2ray 的 config.json 文件即可（建议原文件先备份）
+基础功能：导入 vmess/ss 或者订阅链接，生成 config.json 文件，下载替换 v2ray 的 原 config.json 文件即可（建议原文件先备份）
 
 <!-- 原 electron 客户端的说明 -->
+
+***
 
 ## 使用说法
 
@@ -70,27 +72,27 @@ ip,127.0.0.1,direct // 支持 IP-CIDR ，太麻烦了，不建议使用
 具体内容：
 <pre>
 {
-	"v": "elecV2", //vmess 版本格式声明
-	"protocol": "vmess", // 协议，参数： "vmess" | "shadowsocks" 。合并两个协议方便管理
-	"name": "服务器名称", // 服务器名称
-	"address": "uni.exple.com", // 服务器地址
-	"port": 5666, // 服务器端口，数据类型： number
-	"id": "19328377-d8b3-4e15-b979-81e98d48d86f",  // vmess 服务器 id
-	"aid": 0, // vmess 服务器 alterid
-	"security": "auto", // vmess 服务器加密方式
-	"method": "aes-256-cfb", // ss 服务器加密方式
-	"level": 0, // 用户等级，数据类型： number
-	"network": "ws", // 底层网络协议
-	"tls": "tls", // 是否开启传输层加密, 可选值："tls" | "none"
-	"allowInsecure": true, // 是否允许不安全连接（用于客户端）
-	"tcpfastopen": true, // 是否启用 tcpfastopen
-	"type": "none", // 伪装 header 类型
-	"host": "", // 伪装 host
-	"path": "/v2", // 分流路径
-	"kcp": [1350, 50, 5, 20, false, 2, 2], // kcp 相关设置
-	"password": "", // ss 服务器密码
-	"mux": true, // 是否启用 mux
-	"concurrency": 8 // 最大 tcp 并发连接数
+	"v": "elecV2",		//vmess 版本格式声明
+	"protocol": "vmess",		// 协议，参数： "vmess" | "shadowsocks" 。合并两个协议方便管理
+	"name": "服务器名称",		// 服务器名称
+	"address": "uni.exple.com",		// 服务器地址
+	"port": 5666,		// 服务器端口，数据类型： number
+	"id": "19328377-d8b3-4e15-b979-81e98d48d86f", 		// vmess 服务器 id
+	"aid": 0,		// vmess 服务器 alterid
+	"security": "auto",		// vmess 服务器加密方式
+	"method": "aes-256-cfb",		// ss 服务器加密方式
+	"level": 0,		// 用户等级，数据类型： number
+	"network": "ws",		// 底层网络协议
+	"tls": "tls",		// 是否开启传输层加密, 可选值："tls" | "none"
+	"allowInsecure": true,		// 是否允许不安全连接（用于客户端）
+	"tcpfastopen": true,		// 是否启用 tcpfastopen
+	"type": "none",		// 伪装 header 类型
+	"host": "",		// 伪装 host
+	"path": "/v2",		// 分流路径
+	"kcp": [1350, 50, 5, 20, false, 2, 2],		// kcp 相关设置
+	"password": "",		// ss 服务器密码
+	"mux": true,		// 是否启用 mux
+	"concurrency": 8		// 最大 tcp 并发连接数
 }
 </pre>
 
@@ -106,13 +108,13 @@ ip,127.0.0.1,direct // 支持 IP-CIDR ，太麻烦了，不建议使用
 
 ## 引用项目
 
-[jrqrcode.js](https://github.com/diamont1001/jrQrcode)
-[simplycalc base64.js](https://simplycalc.com/base64-source.php)
-[icon-css](https://www.zhangxinxu.com/sp/icon/css.php)
-[ping.js](http://github.com/alfg/ping.js)
-[Sortable](https://github.com/SortableJS/Sortable)
+- [jrqrcode.js](https://github.com/diamont1001/jrQrcode)
+- [simplycalc base64.js](https://simplycalc.com/base64-source.php)
+- [icon-css](https://www.zhangxinxu.com/sp/icon/css.php)
+- [ping.js](http://github.com/alfg/ping.js)
+- [Sortable](https://github.com/SortableJS/Sortable)
 
-## 项目参考
+## 参考项目
 
-[v2rayN](https://github.com/2dust/v2rayN)
-[SwitchyOmega](https://github.com/FelisCatus/SwitchyOmega)
+- [v2rayN](https://github.com/2dust/v2rayN)
+- [SwitchyOmega](https://github.com/FelisCatus/SwitchyOmega)

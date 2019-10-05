@@ -43,7 +43,7 @@ export default {
 		CompadvanSet
 	},
 	methods: {
-		showSet: function(id) {
+		showSet(id) {
 			this.acTab = id
 		}
 	}
