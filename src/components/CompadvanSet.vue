@@ -1,46 +1,46 @@
 <template>
 <div id="advanSetInfo">
-	<div class="wzborder" id="idtbcs"><span class="mtitle">特殊参数设置</span>
-		<p><b>MUX</b><input type="checkbox" name="mux" v-model="outBset.mux"><b class="cslongb">concurrency</b><input name="concurrency" v-model="outBset.concurrency" placeholder="1-1024"></p>
-		<p><b class="cslongb">tcpfastopen</b><input type="checkbox" name="tcpfastopen" v-model="outBset.tcpfastopen"><b>TLS</b><select name="tls" v-model="outBset.tls">
+	<div class="wzborder"><span class="wzborder_mtitle">特殊参数设置</span>
+		<p><b class="infoname">MUX</b><input type="checkbox" name="mux" v-model="outBset.mux"><b class="infoname infoname_long">concurrency</b><input name="concurrency" v-model="outBset.concurrency" placeholder="1-1024" class="infoinput infoinput_two"></p>
+		<p><b class="infoname infoname_long">tcpfastopen</b><input type="checkbox" name="tcpfastopen" v-model="outBset.tcpfastopen"><b class="infoname">TLS</b><select name="tls" v-model="outBset.tls" class="infoinput infoinput_two">
 				<option>none</option>
 				<option>tls</option>
 			</select></p>
-		<p><b class="cslongb">allowInsecure</b><input type="checkbox" name="allowInsecure" v-model="outBset.allowInsecure"></p>
-		<p class="infolongb"><b>domainStrategy</b><select name="domainStrategy" v-model="outBset.domainStrategy">
+		<p><b class="infoname infoname_long">allowInsecure</b><input type="checkbox" name="allowInsecure" v-model="outBset.allowInsecure"></p>
+		<p><b class="infoname infoname_long">domainStrategy</b><select name="domainStrategy" v-model="outBset.domainStrategy" class="infoinput infoinput_middle">
 				<option>AsIs</option>
 				<option>IPIfNonMatch</option>
 				<option>IPOnDemand</option>
 			</select></p>
 	</div>
-	<div class="wzborder csoutbset"><span class="mtitle">出站及路由优先级</span>
+	<div class="wzborder csoutbset"><span class="wzborder_mtitle">出站及路由优先级</span>
 		<p class="center">第一个选择值顺序第一，第二个第二，剩余一个最后</p>
-		<p class="csoutborder"><b>出站</b><select v-model="outBset.outborder[0]">
+		<p class="csoutborder"><b class="infoname infoname_short">出站</b><select v-model="outBset.outborder[0]" class="infoinput infoinput_two">
 				<option value="proxy">代理</option>
 				<option value="direct">直连</option>
 				<option value="block">阻止</option>
-			</select><select v-model="outBset.outborder[1]">
+			</select><select v-model="outBset.outborder[1]" class="infoinput infoinput_two">
 				<option value="proxy">代理</option>
 				<option value="direct">直连</option>
 				<option value="block">阻止</option>
 			</select></p>
 		<p class="tip">* 没有匹配到路由规则的网站默认使用第一个出站协议<br>* 即： 代理优先 - 白名单模式 直连优先 - 黑名单模式</p>
-		<p class="csroutorder"><b>路由</b><select v-model="outBset.routorder[0]">
+		<p class="csroutorder"><b class="infoname infoname_short">路由</b><select v-model="outBset.routorder[0]" class="infoinput infoinput_two">
 				<option value="proxy">代理</option>
 				<option value="direct">直连</option>
 				<option value="block">阻止</option>
-			</select><select v-model="outBset.routorder[1]">
+			</select><select v-model="outBset.routorder[1]" class="infoinput infoinput_two">
 				<option value="proxy">代理</option>
 				<option value="direct">直连</option>
 				<option value="block">阻止</option>
 			</select></p>
 	</div>
-	<div class="wzborder cskcpset"><span class="mtitle">KCP参数设置</span>
-		<p><b>mtu</b><input name='mtu' v-model='outBset.kcp[0]' placeholder='最大传输单元 576 - 1460'></p>
-		<p><b>tti</b><input name='tti' v-model='outBset.kcp[1]' placeholder='传输时间间隔 10 - 100'></p>
-		<p class="infolongb"><b>ulinkCapacity</b><input name='uplinkCapacity' v-model='outBset.kcp[2]' placeholder='上行链路容量，单位 MB/s'></p>
-		<p class="infolongb"><b>dlinkCapacity</b><input name='downlinkCapacity' v-model='outBset.kcp[3]' placeholder='下行链路容量，单位 MB/s'></p>
-		<p><b class="cslongb">congestion</b><input type="checkbox" name="congestion" v-model="outBset.kcp[4]"><b>伪装类型</b><select v-model="outBset.kcp[7]" name="type">
+	<div class="wzborder cskcpset"><span class="wzborder_mtitle">KCP参数设置</span>
+		<p><b class="infoname">mtu</b><input name='mtu' v-model='outBset.kcp[0]' placeholder='最大传输单元 576 - 1460' class="infoinput"></p>
+		<p><b class="infoname">tti</b><input name='tti' v-model='outBset.kcp[1]' placeholder='传输时间间隔 10 - 100' class="infoinput"></p>
+		<p><b class="infoname infoname_long">ulinkCapacity</b><input name='uplinkCapacity' v-model='outBset.kcp[2]' placeholder='上行链路容量，单位 MB/s' class="infoinput infoinput_middle"></p>
+		<p><b class="infoname infoname_long">dlinkCapacity</b><input name='downlinkCapacity' v-model='outBset.kcp[3]' placeholder='下行链路容量，单位 MB/s' class="infoinput infoinput_middle"></p>
+		<p><b class="infoname infoname_long">congestion</b><input type="checkbox" name="congestion" v-model="outBset.kcp[4]"><b class="infoname">伪装类型</b><select v-model="outBset.kcp[7]" name="type" class="infoinput infoinput_two">
 				<option>none</option>
 				<option>srtp</option>
 				<option>utp</option>
@@ -48,9 +48,9 @@
 				<option>dtls</option>
 				<option>wireguard</option>
 			</select></p>
-		<p><b>rBSize</b><input name='readBufferSize' v-model='outBset.kcp[5]' placeholder='读缓 MB'><b>wBSize</b><input name='writeBufferSize' v-model='outBset.kcp[6]' placeholder='写缓 MB'></p>
+		<p><b class="infoname">rBSize</b><input name='readBufferSize' v-model='outBset.kcp[5]' placeholder='读缓 MB' class="infoinput infoinput_two"><b class="infoname infoname_short">wBSize</b><input name='writeBufferSize' v-model='outBset.kcp[6]' placeholder='写缓 MB' class="infoinput infoinput_two"></p>
 	</div>
-	<p class="center"><button @click="saveadvanSet">保存</button></p>
+	<p class="center"><button @click="saveadvanSet" class="nbutton nbutton--long">保存</button></p>
 </div>
 </template>
 
@@ -88,9 +88,9 @@ export default {
 </script>
 
 <style>
-#advanSetInfo #idtbcs input[type=checkbox], #advanSetInfo .cskcpset input[type=checkbox] {margin-right: 40px}
+input[type=checkbox], input[type=checkbox] {margin-right: 40px}
 
-#advanSetInfo .csoutbset p select {
+.csoutbset p select {
   margin-right: 68px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-	<div id="cmd">
-		<input id="cmdStr" placeholder="cls" @keyup="run" v-model="current">
-		<div id="consoleout" v-html="resultsshow"></div>
+	<div class="cmd" :style="{ background: themecl[2], color: themecl[0] }">
+		<input class="cmd_line" placeholder="cls" @keyup="run" v-model="current">
+		<div class="cmd_results" v-html="resultsshow"></div>
 	</div>
 </template>
 
@@ -13,7 +13,8 @@ export default {
 			history: [],
 			historyind: 0,
 			current: 'cls',
-			results: []
+			results: [],
+			themecl: this.$root.themecl
 		}
 	},
 	computed: {
@@ -57,7 +58,14 @@ export default {
 </script>
 
 <style>
-#cmd input{
+.cmd {
+	width: 100%;
+	max-width:960px;
+	height: 220px;
+	border-radius: 0 0 8px 8px
+}
+
+.cmd_line {
 	border: none;
 	height: 36px;
 	width: 100%;
@@ -65,12 +73,16 @@ export default {
 	padding-left: 8px;
 	font-size: 22px;
 }
-#cmd input:focus,#cmd input:active{outline: none}
-#consoleout{
+
+.cmd_line:focus, .cmd_line:active{outline: none}
+
+.cmd_results{
 	font-size: 20px;
 	overflow-y: auto;
 	word-break: break-all;
 	padding: 0 12px;
 	box-sizing: border-box;
+	width: 100%;
+	height: 180px
 }
 </style>

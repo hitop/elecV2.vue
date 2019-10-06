@@ -1,32 +1,29 @@
 <template>
-	<div id="fruleSetInfo">
-	<ul class="csfMenu">
-		<li @click="save">保存 - <small>当前规则总行 </small><i>{{ rules.length }}</i></li>
-	</ul>
-	<div id="fruleTable" class="sInfoMtop">
+<div id="fruleSetInfo">
+	<div class="fruletable">
 		<table cellspacing="0" cellpadding="0">
 			<thead>
 				<tr>
-					<th class="csfixedtbwidth">匹配方式</th>
+					<th class="fruletable_fixedwidth">匹配方式</th>
 					<th>匹配内容</th>
-					<th class="csfixedtbwidth">分流规则</th>
-					<th class="csfixedtbwidth">操作</th>
+					<th class="fruletable_fixedwidth">分流规则</th>
+					<th class="fruletable_fixedwidth">操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="(rule, ind) in editrules" :key="ind">
-					<td name="nmMrule"><select v-model="rule[0]">
+					<td><select v-model="rule[0]">
 							<option value="key">关键字</option>
 							<option value="domain">子域名</option>
 							<option value="ip">IP</option>
 						</select></td>
-					<td name="nmMcont"><input v-model="rule[1]"></td>
-					<td name="nmOutbt"><select v-model="rule[2]">
+					<td><input v-model="rule[1]"></td>
+					<td><select v-model="rule[2]">
 							<option value="proxy">代理</option>
 							<option value="direct">直连</option>
 							<option value="block">阻止</option>
 						</select></td>
-					<td class="csaction"><span @click="deltbrule(ind)"><span class="cslittlebutton icon-delete"></span></span><span @click="copytbrule(ind)"><span class="cslittlebutton icon-copy"></span></span></td>
+					<td class="fruletable_action"><span @click="deltbrule(ind)" class="fruletable_acbutton"><span class="cslittlebutton icon-delete"></span></span><span @click="copytbrule(ind)" class="fruletable_acbutton"><span class="cslittlebutton icon-copy"></span></span></td>
 				</tr>
 			</tbody>
 			<tfoot>
@@ -42,7 +39,8 @@
 		</table>
 		<p class="cspage"></p>
 	</div>
-	<div id="idrulescont"><textarea v-model="strrules"></textarea></div>
+	<div><textarea class="infoinput rulescont" v-model="strrules"></textarea></div>
+	<p class="center"><button @click="save" class="nbutton nbutton--long"> 保存 - <small>当前规则总行 </small><i>{{ rules.length }}</i></button></p>
 </div>
 </template>
 
@@ -168,15 +166,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 /******* 分流表格样式 ***********/
-#fruleTable table {
+.fruletable table {
 	width: 608px;
 	border-radius: 8px;
 	border: 1px solid;
 }
 
-#fruleTable th {
+.fruletable th {
 	text-align: center;
 	box-sizing: border-box;
 	border: 1px solid;
@@ -185,7 +183,7 @@ export default {
 	padding: 6px;
 }
 
-#fruleTable tr td {
+.fruletable tr td {
 	border: 1px solid;
 	border-top: none;
 	box-sizing: border-box;
@@ -193,43 +191,26 @@ export default {
 	height: 46px;
 }
 
-#fruleTable tr th:first-child {
+.fruletable tr th:first-child {
 	border-top-left-radius: 8px;
 }
 
-#fruleTable tr th:last-child {
+.fruletable tr th:last-child {
 	border-top-right-radius: 8px;
 }
 
-#fruleTable tr th.csfixedtbwidth {
+.fruletable .fruletable_fixedwidth {
 	width: 120px;
 }
 
-#fruleTable td.csaction {
+.fruletable .fruletable_action {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	padding: 0;
 }
 
-#fruleTable table td select, #fruleTable table td input {
-	width: 100%;
-	font-size: 18px;
-	height: 32px;
-	line-height: 32px;
-	padding: 0px 8px;
-}
-
-#fruleTable tfoot tr td {
-	border-radius: 0 0 8px 8px;
-	text-align: center;
-	font-size: 22px;
-	height: 30px;
-	padding: 0;
-	cursor: pointer;
-}
-
-#fruleTable td.csaction > span {
+.fruletable .fruletable_acbutton {
 	padding: 0px 5px;
 	border: 1px solid;
 	border-radius: 4px;
@@ -238,12 +219,32 @@ export default {
 	cursor: pointer;
 }
 
-#idrulescont textarea {
+.fruletable table td select, .fruletable table td input {
+	width: 100%;
+	font-size: 18px;
+	height: 32px;
+	line-height: 32px;
+	padding: 0px 8px;
+}
+
+.fruletable tfoot tr td {
+	border-radius: 0 0 8px 8px;
+	text-align: center;
+	font-size: 22px;
+	height: 30px;
+	padding: 0;
+	cursor: pointer;
+}
+
+.rulescont {
 	width: 608px;
 	height: 400px;
 	text-align: left;
 	font-size: 22px;
 	line-height: 32px;
 	background-size: 100% 32px;
+	background-image: var(--linear-gradient)
 }
+
+.rulescont::-webkit-scrollbar-thumb{background: var(--themecl-three)}
 </style>

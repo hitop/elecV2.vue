@@ -1,16 +1,16 @@
 <template>
-	<div id="elecV2Set">
-	<div id="left">
-		<div id="idDrag">{{ title }}</div>
-		<span id="settingShow" @click="$emit('set-show')"><span class="icon-menu cslittlebutton"></span></span>
-		<ul id="setting"><li v-for="cset in setlists" :key="cset.id" @click="showSet(cset.id)" :id="cset.id" :class="{ active : acTab == cset.id }">{{ cset.text }}</li></ul>
+<div id="elecV2Set">
+	<div class="nav">
+		<div class="todrag">{{ title }}</div>
+		<span class="settingShow" @click="$emit('set-show')"><span class="icon-menu cslittlebutton"></span></span>
+		<ul class="setting"><li class="" v-for="cset in setlists" :key="cset.id" @click="showSet(cset.id)" :class="['nav_tab', { 'nav_tab--actived' : acTab == cset.id }]">{{ cset.text }}</li></ul>
 	</div>
-	<div id="infos">
+	<div class="contents">
 		<keep-alive>
-		<setpanel :is="'Comp' + acTab"/>
+			<setpanel :is="'Comp' + acTab"/>
 		</keep-alive>
 	</div>
-	</div>
+</div>
 </template>
 
 <script>
@@ -34,7 +34,7 @@ export default {
 			acTab: 'basesSet'
 		}
 	},
-	props: ['title'],
+	props: ['title', 'navtabstyle'],
 	components: {
 		CompbasesSet,
 		CompthemeSet,
@@ -49,3 +49,7 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+#elecV2Set { height: 460px }
+</style>

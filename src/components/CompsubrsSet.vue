@@ -1,12 +1,12 @@
 <template>
-	<div id="subrsSetInfo">
-	<div id="idsublist">
-		<ul><li v-for="(rs, rid) in subrs" :key="rid" :id="rid" @click="upsubrules" @mouseleave="isupdatesub=''">{{ rs.name + isupdatesub }}</li></ul><span>{{ rs.numb }}</span>
+<div>
+	<div>
+		<ul><li v-for="(rs, rid) in subrs" :key="rid" @click="upsubrules" class="subitem">{{ rs.name }} <span class="subitem-numb">{{ rs.numb }}</span></li></ul>
 	</div>
-	<div class="sInfoMtop">
-		<p><b>订阅链接</b><input name="suburl" v-model="subrurl"></p>
-		<p><b>订阅名字</b><input name="name" v-model="subrname"></p>
-		<p class="longButton center"><button @click="addSuburl()">添加订阅</button></p>
+	<div>
+		<p><b class="infoname">订阅链接</b><input name="suburl" v-model="subrurl" class="infoinput"></p>
+		<p><b class="infoname">订阅名字</b><input name="name" v-model="subrname" class="infoinput"></p>
+		<p class="center"><button @click="addSuburl()" class="nbutton nbutton--long">添加订阅</button></p>
 	</div>
 </div>
 </template>
@@ -19,15 +19,13 @@ export default {
 			subrs: this.$root.gConf.subrules,
 			rules: this.$root.gConf.routing,
 			subrurl: '',
-			subrname: '',
-			isupdatesub: ''
+			subrname: ''
 		}
 	},
 	methods: {
 		upsubrules(event) {
 			// 更新规则
-			if (this.isupdatesub) {
-				this.isupdatesub = ''
+			if (confirm("从这个规则源添加新的规则？")) {
 				event.target.classList.add("waitdot")
 				let rid = event.target.id
 				let url = this.subrs[rid].surl
@@ -41,8 +39,6 @@ export default {
 					event.target.style.background = "#fff"
 					event.target.classList.remove("waitdot")
 				})
-			} else {
-				this.isupdatesub = " - 再次点击更新此订阅"
 			}
 		},
 		addSuburl() {
@@ -51,9 +47,9 @@ export default {
 				let sid = this.$root.newElecId()
 				this.$set(this.subrs, sid, {name: this.subrname, surl: this.subrurl, numb: 0})
 				this.$root.saveGconf()
-				this.$root.alertElec("新的订阅已保存")
+				this.$elecV2Alert("新的订阅已保存")
 			} else {
-				this.$root.alertElec("输入不能为空")
+				this.$elecV2Alert("输入不能为空")
 			}
 		},
 		clarifyRule(rule) {
@@ -115,7 +111,8 @@ export default {
 </script>
 
 <style>
-#subrsSetInfo ul li {
+.subitem {
+	background: var(--themecl-zero);
 	text-align: center;
 	box-sizing: border-box;
 	border-radius: 10px;
@@ -129,7 +126,7 @@ export default {
 	position: relative;
 }
 
-#subrsSetInfo ul li span {
+.subitem-numb {
 	font-size: 12px;
 	line-height: 30px;
 	position: absolute;
