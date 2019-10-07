@@ -1,24 +1,25 @@
 <template>
-<div id="fruleSetInfo">
-	<div class="fruletable">
-		<table cellspacing="0" cellpadding="0">
+<div>
+	<p class="center"><button @click="frulesave" class="nbutton nbutton--long"> 保存 - <small>当前规则总行 </small><i>{{ rules.length-1 }}</i></button></p>
+	<div>
+		<table cellspacing="0" cellpadding="0" class="fruletable">
 			<thead>
 				<tr>
-					<th class="fruletable_fixedwidth">匹配方式</th>
-					<th>匹配内容</th>
-					<th class="fruletable_fixedwidth">分流规则</th>
-					<th class="fruletable_fixedwidth">操作</th>
+					<th class="fruletable_th fruletable_fixedwidth">匹配方式</th>
+					<th class="fruletable_th">匹配内容</th>
+					<th class="fruletable_th fruletable_fixedwidth">分流规则</th>
+					<th class="fruletable_th fruletable_fixedwidth">操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="(rule, ind) in editrules" :key="ind">
-					<td><select v-model="rule[0]">
+					<td><select v-model="rule[0]" class="infoinput fruletable_select">
 							<option value="key">关键字</option>
 							<option value="domain">子域名</option>
 							<option value="ip">IP</option>
 						</select></td>
-					<td><input v-model="rule[1]"></td>
-					<td><select v-model="rule[2]">
+					<td><input v-model="rule[1]" class="infoinput fruletable_input"></td>
+					<td><select v-model="rule[2]" class="infoinput fruletable_select">
 							<option value="proxy">代理</option>
 							<option value="direct">直连</option>
 							<option value="block">阻止</option>
@@ -37,19 +38,18 @@
 				</tr>
 			</tfoot>
 		</table>
-		<p class="cspage"></p>
 	</div>
-	<div><textarea class="infoinput rulescont" v-model="strrules"></textarea></div>
-	<p class="center"><button @click="save" class="nbutton nbutton--long"> 保存 - <small>当前规则总行 </small><i>{{ rules.length }}</i></button></p>
+	<div>
+		<textarea class="infoinput rulescont" v-model="strrules"></textarea></div>
 </div>
 </template>
 
 <script>
 export default {
-	name: 'CompfruleSet',
+	name: 'elecV2SetFrule',
 	data(){
 		return {
-			rules: this.$root.gConf.routing,
+			rules: this.$store.state.gConf.routing,
 			editrules: []
 		}
 	},
@@ -157,10 +157,11 @@ export default {
 			}
 			this.rules = result
 		},
-		save() {
+		frulesave() {
 			this.distinct()
-			this.$root.saveGconf()
-			this.$root.alertElec("去掉重复及错误，总保存分流规则 " + this.rules.length)
+			this.$store.state.gConf.routing = this.rules
+			this.$store.commit('saveGconf')
+			this.$elecV2Alert("去掉重复及错误，总保存分流规则 " + (this.rules.length-1))
 		}
 	}
 }
@@ -168,13 +169,13 @@ export default {
 
 <style scoped>
 /******* 分流表格样式 ***********/
-.fruletable table {
+.fruletable {
 	width: 608px;
 	border-radius: 8px;
 	border: 1px solid;
 }
 
-.fruletable th {
+.fruletable_th {
 	text-align: center;
 	box-sizing: border-box;
 	border: 1px solid;
@@ -183,20 +184,20 @@ export default {
 	padding: 6px;
 }
 
+.fruletable_th:first-child {
+	border-top-left-radius: 8px;
+}
+
+.fruletable_th:last-child {
+	border-top-right-radius: 8px;
+}
+
 .fruletable tr td {
 	border: 1px solid;
 	border-top: none;
 	box-sizing: border-box;
 	padding: 4px 8px;
 	height: 46px;
-}
-
-.fruletable tr th:first-child {
-	border-top-left-radius: 8px;
-}
-
-.fruletable tr th:last-child {
-	border-top-right-radius: 8px;
 }
 
 .fruletable .fruletable_fixedwidth {
@@ -219,7 +220,7 @@ export default {
 	cursor: pointer;
 }
 
-.fruletable table td select, .fruletable table td input {
+.fruletable_select, .fruletable_input {
 	width: 100%;
 	font-size: 18px;
 	height: 32px;
@@ -236,9 +237,39 @@ export default {
 	cursor: pointer;
 }
 
+.icon-copy::before {
+  width: .7em; height: .8em;
+  border: 2px solid;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  border-radius: .1em;  
+  left: 40%; top: 40%;
+}
+.icon-copy::after {
+  width: .7em; height: .8em;
+  border: 2px solid;
+  border-radius: .1em;
+  left: 60%; top: 60%;
+}
+.icon-delete {color: red;}
+.icon-delete::before {
+  width: .75em; height: .6em;
+  border: 2px solid;
+  border-top: 0;
+  border-radius: 0 0 2px 2px;  
+  top: 70%;
+}
+.icon-delete::after {
+  width: .5em;
+  border-top: 2px solid;
+  box-shadow: -.2em .2em, .2em .2em;
+  top: 1px;
+}
+
 .rulescont {
 	width: 608px;
 	height: 400px;
+	margin-top: 1em;
 	text-align: left;
 	font-size: 22px;
 	line-height: 32px;

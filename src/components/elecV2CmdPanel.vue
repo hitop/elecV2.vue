@@ -1,5 +1,5 @@
 <template>
-	<div class="cmd" :style="{ background: themecl[2], color: themecl[0] }">
+	<div class="cmd">
 		<input class="cmd_line" placeholder="cls" @keyup="run" v-model="current">
 		<div class="cmd_results" v-html="resultsshow"></div>
 	</div>
@@ -7,14 +7,13 @@
 
 <script>
 export default {
-	name: 'cmdPanel',
+	name: 'elecV2CmdPanel',
 	data(){
 		return {
 			history: [],
 			historyind: 0,
 			current: 'cls',
-			results: [],
-			themecl: this.$root.themecl
+			results: []
 		}
 	},
 	computed: {
@@ -59,6 +58,8 @@ export default {
 
 <style>
 .cmd {
+	background: var(--themecl-two);
+	color: var(--themecl-zero);
 	width: 100%;
 	max-width:960px;
 	height: 220px;

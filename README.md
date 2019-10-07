@@ -1,9 +1,8 @@
-# *原来是一个基于 electron/nodejs 的客户端，学习 vue , 新开的一个网页版*
+# *原来是一个基于 electron/nodejs 的 v2ray 客户端，学习 vue , 新开的一个网页版*
 
 基础功能：导入 vmess/ss 或者订阅链接，生成 config.json 文件，下载替换 v2ray 的 原 config.json 文件即可（建议原文件先备份）
 
-<!-- 原 electron 客户端的说明 -->
-
+#### *原 electronV2 客户端的说明 :*
 ***
 
 ## 使用说法

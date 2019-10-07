@@ -1,21 +1,21 @@
 <template>
 	<div :style="themeclstyle">
 		<keep-alive>
-			<panel :is="currentpanel" :title="title" @set-show="setShow"/>
+			<panel :is="currentpanel" @set-toggle="setToggle"/>
 		</keep-alive>
-		<cmdPanel/>
+		<elecV2CmdPanel/>
 		<div id="elecV2Plugin"></div>
 	</div>
 </template>
 
 <script>
-import cmdPanel from "./components/cmdPanel.vue"
-import elecV2Ser from "./components/elecV2Ser.vue"
-import elecV2Set from "./components/elecV2Set.vue"
+import elecV2CmdPanel from "./elecV2CmdPanel.vue"
+import elecV2Ser from "./elecV2Ser.vue"
+import elecV2Set from "./elecV2Set.vue"
 
 export default {
 	name: 'elecV2',
-	data(){
+	data() {
 		return {
 			title: 'elecV2 网页版',
 			themecl: this.$root.themecl,
@@ -37,12 +37,12 @@ export default {
 		}
 	},
 	components: {
-		cmdPanel,
 		elecV2Ser,
-		elecV2Set
+		elecV2Set,
+		elecV2CmdPanel,
 	},
 	methods: {
-		setShow(){
+		setToggle(){
 			if (this.currentpanel == "elecV2Ser") {
 				this.currentpanel = "elecV2Set"
 			} else {
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style>
-html,body{
+html, body { 
 	padding: 0;
 	margin: auto;
 	width: 100vw;
@@ -64,31 +64,12 @@ html,body{
 	overflow-x: hidden;
 	-webkit-font-smoothing: antialiased;
 	font-family: Microsoft YaHei UI,Consolas,Arial,sans-serif;
-	position: relative;
 }
+ul { list-style: none;padding-left: 0; margin: 0 }
+
 ::-webkit-scrollbar{width: 8px;height: 8px;background: transparent;border-radius: 8px}
 ::-webkit-scrollbar-corner {border-radius: 8px}
 .nav::-webkit-scrollbar-thumb, .contents::-webkit-scrollbar-thumb {border: none;z-index: 9999;-webkit-border-radius: 8px;background: var(--themecl-three)}
-
-#elecV2Ser, #elecV2Set { height: 460px }
-
-/************ 主题 style ************/
-ul { padding-left: 0; margin: 0 }
-li { list-style: none; }
-
-textarea {
-	vertical-align: middle;
-	min-height: 106px;
-	line-height: 32px;
-	background-size: 100% 32px
-}
-
-input[type="checkbox"] {
-	width: 18px;
-	height: 18px;
-	margin: 10px;
-	cursor: pointer;
-}
 
 .infoname {
 	width: 136px;
@@ -116,9 +97,26 @@ input[type="checkbox"] {
 	outline:0;
 	border-radius: 8px;
 	font: 400 24px Arial;
-	letter-spacing: 1px
+	letter-spacing: 1px;
+	cursor: pointer;
 }
 .infoinput:hover { box-shadow: var(--boxshadow-three) }
+
+.infoinput_textarea {
+	vertical-align: middle;
+	min-height: 106px;
+	line-height: 32px;
+	background-size: 100% 32px
+}
+
+.infoinput_checkbox {
+	width: 18px;
+	height: 18px;
+	margin-right: 22px;
+	/*margin: 10px;*/
+	cursor: pointer;
+}
+
 .infoinput_short { width: 100px }
 .infoinput_two { width: 156px }
 .infoinput_middle { width: 340px }
@@ -140,8 +138,7 @@ input[type="checkbox"] {
 	font-size: 24px;
 }
 
-/************ end 主题 style end ************/
-.center{text-align: center}
+.center { text-align: center }
 
 .nbutton {
 	background: var(--themecl-two);
@@ -235,42 +232,6 @@ input[type="checkbox"] {
 	color: var(--themecl-one)
 }
 
-.todrag {
-	color: var(--themecl-two);
-	height: 30px;
-	width: 270px;
-	font-size: 20px;
-	padding-top: 6px;
-	overflow: hidden;
-	cursor: move;
-	text-align: center;
-	float: left;
-}
-
-.settingShow {
-	color: var(--themecl-one);
-	position: fixed;
-	display: inline-block;
-	z-index: 999;
-	height: 16px;
-	width: 16px;
-	border-radius: 50%;
-	cursor: pointer;
-	padding: 4px;
-	opacity: 0.6;
-	position: sticky;
-	left: 286px;
-	top: 420px;
-	background: var(--themecl-two);
-	font-size: 0px;
-}
-
-.settingShow:hover {
-	box-shadow: var(--boxshadow-three);
-	transform: scale(1.2);
-	opacity: 1
-}
-
 .contents {
 	background: var(--themecl-one);
 	color: var(--themecl-two);
@@ -306,34 +267,7 @@ input[type="checkbox"] {
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-.icon-copy::before {
-  width: .7em; height: .8em;
-  border: 2px solid;
-  border-bottom-color: transparent;
-  border-right-color: transparent;
-  border-radius: .1em;  
-  left: 40%; top: 40%;
-}
-.icon-copy::after {
-  width: .7em; height: .8em;
-  border: 2px solid;
-  border-radius: .1em;
-  left: 60%; top: 60%;
-}
-.icon-delete {color: red;}
-.icon-delete::before {
-  width: .75em; height: .6em;
-  border: 2px solid;
-  border-top: 0;
-  border-radius: 0 0 2px 2px;  
-  top: 70%;
-}
-.icon-delete::after {
-  width: .5em;
-  border-top: 2px solid;
-  box-shadow: -.2em .2em, .2em .2em;
-  top: 1px;
-}
+
 .icon-move {cursor: move;}
 .icon-move::before,
 .icon-move::after {
@@ -348,11 +282,6 @@ input[type="checkbox"] {
 .icon-move::after {
   -ms-transform: translate(-50%, -10%) rotate(225deg);
   transform: translate(-50%, -10%) rotate(225deg);
-}
-.icon-menu::before {
-  box-shadow: 0 -.35em, 0 .35em;
-  border-top: 2px solid;
-  width: 100%;
 }
 .icon-close::before {
   width: 90%;
@@ -377,10 +306,6 @@ input[type="checkbox"] {
   border-top-color: transparent;
   border-radius: 50%;
 }
-.icon-minus::before {
-  width: 90%;
-  border-top: 2px solid;
-}
 /******** end css icon end ************/
 
 /************** css 动画 **********/
@@ -400,23 +325,6 @@ input[type="checkbox"] {
   66.66667% { transform:translate(0,0) }
   83.33333% { transform:translate(15px,0) }
   100% { transform:translate(0,0) }
-}
-
-.loading:after {
-  overflow: hidden;
-  position: absolute;
-  display: inline-block;
-  vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
-  animation: ellipsis steps(4,end) 900ms infinite;
-  content: "\2026"; /* ascii code for the ellipsis character */
-  width: 0px;
-}
-
-@keyframes ellipsis {
-  to {
-    width: 1.25em;    
-  }
 }
 /************* end css 动画 ***************/
 </style>

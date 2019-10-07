@@ -1,8 +1,7 @@
 <template>
-<div id="elecV2Ser">
+<div class="elecV2Ser">
 	<div class="nav">
-		<div class="todrag">{{ title }}</div>
-		<span class="settingShow" @click="$emit('set-show')"><span class="icon-menu cslittlebutton"></span></span>
+		<elecV2Head/><elecV2Toggle  @set-toggle="$emit('set-toggle')"/>
 		<ul class="serlists">
 			<li v-for="ser in nogroupser" :class="['nav_tab', { 'nav_tab--actived' : slcser == ser }]" :key="ser" @click.self="showSerInfo(ser)">{{ serlists[ser].name }}<span class="serlists_delete" @click.prevent="delSer(ser)">x</span></li>
 			<li class="nav_tab nav_tab--addser" @click="showSerInfo('addSer')">+</li>
@@ -17,7 +16,7 @@
 	<div class="contents">
 		<ul id="serInfoList">
 			<li v-show="addSershow">
-				<p><b class="infoname">链接</b><textarea type='text' name='adds' v-model='addsurl' placeholder="vmess://xxx or ss://xxxx or 订阅地址" class="infoinput"></textarea></p>
+				<p><b class="infoname">链接</b><textarea type='text' name='adds' v-model='addsurl' placeholder="vmess://xxx or ss://xxxx or 订阅地址" class="infoinput infoinput_textarea"></textarea></p>
 				<p><b class="infoname">别名</b><input name='sername' v-model='addname' placeholder='可留空' class="infoinput"></p>
 				<p><b class="infoname">添加到组</b><select v-model='addgroup' class="infoinput">
 						<option value="none">不添加到分组</option>
@@ -28,13 +27,13 @@
 			<li v-if="currentgid" :id="currentgid + 'Info'">
 				<div class="wzborder"><span class="wzborder_mtitle">订阅组信息</span>
 					<h3 class="infotitle"><big class="infoname">名字</big><input name='name' type='text' v-model='group[currentgid].name' class="infoinput"></h3>
-					<p><b class="infoname">链接</b><textarea type='text' name='gurl' v-model='group[currentgid].suburl' class="infoinput"></textarea></p>
+					<p><b class="infoname">链接</b><textarea type='text' name='gurl' v-model='group[currentgid].suburl' class="infoinput infoinput_textarea"></textarea></p>
 					<p class='flexspace'><button class="nbutton" @click='upGSer("change")'>保存更改</button><button class="nbutton" @click='upGSer("update")'>更新订阅</button></p>
 					<p class="fgf"></p>
 					<p class='flexspace'><button class="nbutton nbutton--del" @click.prevent='upGSer("delete")'>删除订阅</button><button class="nbutton" @click='upGSer("export")'>导出订阅</button></p>
 				</div>
 			</li>
-			<CompSerInfo v-if="slcser" :slcser="slcser"/>
+			<elecV2SerInfo v-if="slcser" :slcser="slcser"/>
 		</ul>
 	</div>
 </div>
@@ -42,15 +41,18 @@
 
 <script>
 // import Ping from 'ping.js'
-import CompSerInfo from './CompSerInfo.vue'
+import { putFile, newElecId } from '../util.js'
+import elecV2Head from './elecV2Head.vue'
+import elecV2Toggle from './elecV2Toggle.vue'
+import elecV2SerInfo from './elecV2SerInfo.vue'
 import { Base64 } from 'js-base64'
 
 export default {
 	name: 'elecV2Ser',
 	data(){
 		return {
-			serlists: this.$root.gConf.serlists,
-			group: this.$root.gConf.group,
+			serlists: this.$store.state.gConf.serlists,
+			group: this.$store.state.gConf.group,
 			addsurl: '',
 			addname: '',
 			addgroup: 'none',
@@ -60,8 +62,12 @@ export default {
 			gcollapse: []
 		}
 	},
-	props: ['title', 'navtabstyle'],
-	components: {CompSerInfo},
+	props: [],
+	components: {
+		elecV2Head,
+		elecV2Toggle,
+		elecV2SerInfo
+	},
 	computed: {
 		nogroupser() {return Object.keys(this.serlists).filter(ser=>!this.serlists[ser].group)},
 		groupser() {
@@ -73,7 +79,6 @@ export default {
 			return gser
 		}
 	},
-	created(){},
 	methods: {
 		showSerInfo(id, isgroup=false) {
 			if (id == "addSer") {
@@ -102,13 +107,13 @@ export default {
 		},
 		addToSerlists(surl, addgp=null, sname=null) {
 			if(surl.match(/^(vmess:\/\/|ss:\/\/)/i)) {
-				let serid = this.$root.newElecId()
+				let serid = newElecId()
 				let sjson = this.surlToJson(surl)
 				sjson.name = sname || sjson.name || "新服务器"
 				addgp = addgp=="none"?null:addgp
 				surl = (sjson.protocol=='shadowsocks'?"ss://":"vmess://") + Base64.encodeURI(JSON.stringify(sjson))
 				this.$set(this.serlists, serid, {"name": sjson.name, "surl": surl, "group": addgp, "address": sjson.address})
-				this.$root.saveGconf()
+				this.$store.commit('saveGconf')
 				this.$elecV2Alert("成功添加服务器 " + sjson.name )
 			} else this.$elecV2Alert("添加的服务器信息有误，请修改后重试")
 		},
@@ -116,7 +121,8 @@ export default {
 			if (confirm("确定删除？")) {
 				this.slcser = false
 				this.$delete(this.serlists, sTag)
-				this.$root.saveGconf()
+				this.$store.commit('saveGconf')
+				// this.$root.saveGconf()
 			}
 		},
 		shuffle(array) {
@@ -131,15 +137,14 @@ export default {
 			}
 			return array
 		},
-		updateGroupSer(groupid, mn=this.$root.gConf.evset.maxSubsers, isRandsub=this.$root.gConf.evset.isRandsub) {
+		updateGroupSer(groupid, mn=this.$store.state.gConf.evset.maxSubsers, isRandsub=this.$store.state.gConf.evset.isRandsub) {
 			// 更新一个订阅组信息, mn 获取服务器个数
 			if (this.group[groupid] && this.group[groupid].suburl) {
 				for (let ser in this.serlists) {
 					if (this.serlists[ser].group == groupid) delete this.serlists[ser]
 				}
 				let suburl = this.group[groupid].suburl
-				fetch(suburl).then((response)=>{return response.text()})
-				.then((rtext)=>{
+				fetch(suburl).then(response=>response.text()).then((rtext)=>{
 					let ser = Base64.decode(rtext).split(/\r?\n/), j = 1
 					if (ser.length>mn && isRandsub) ser = this.shuffle(ser)
 					for (let si of ser) {
@@ -158,7 +163,7 @@ export default {
 			if (this.addsurl == "") {	this.$elecV2Alert("输个值呀，兄弟~");	return false }
 			if (/^http/i.test(this.addsurl)) {
 				if (this.addgroup!="none") { this.$elecV2Alert("不支持订阅组添加到组");return false	}
-				let ngid = this.$root.newElecId()
+				let ngid = newElecId()
 				this.group[ngid] = {}
 				this.group[ngid].name = this.addname || "新订阅组"
 				this.group[ngid].suburl = this.addsurl
@@ -181,13 +186,14 @@ export default {
 				case "change":
 					this.group[groupid].name = ngname
 					this.group[groupid].suburl = ngurl
-					this.$root.saveGconf()
+					this.$store.commit('saveGconf')
 					this.$elecV2Alert("更改完成")
 					break
 				case "update":
 					this.group[groupid].name = ngname
 					this.group[groupid].suburl = ngurl
 					this.updateGroupSer(groupid)
+					this.$elecV2Alert("更新中，请稍等...")
 					break
 				case "delete":
 					// 删除一个订阅
@@ -198,16 +204,15 @@ export default {
 							if (this.serlists[ser].group == groupid) this.$delete(this.serlists, ser)
 						}
 						this.$delete(this.group, groupid)
-						this.$root.saveGconf()
+						this.$store.commit('saveGconf')
 					}
 					break
-				case "export":{
+				case "export": {
 					// 导出订阅组信息
-					let sa = this.groupser[groupid].lists.map(sid=>this.serlists[sid].surl)
-					this.$root.putFile(sa.join("\n"), this.group[groupid].name)
+					putFile(this.groupser[groupid].map(sid=>this.serlists[sid].surl).join("\n"), this.group[groupid].name)
 					break
 				}
-				default:{
+				default: {
 					break
 				}
 			}
@@ -281,7 +286,7 @@ export default {
 </style>
 
 <style scoped>
-#elecV2Ser { height: 460px }
+.elecV2Ser { height: 460px }
 .serlists {
 	box-sizing: border-box;
 	list-style: none;

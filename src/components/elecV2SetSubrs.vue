@@ -1,7 +1,7 @@
 <template>
 <div>
 	<div>
-		<ul><li v-for="(rs, rid) in subrs" :key="rid" @click="upsubrules" class="subitem">{{ rs.name }} <span class="subitem-numb">{{ rs.numb }}</span></li></ul>
+		<ul><li v-for="(rs, rid) in subrs" :key="rid" @click="upsubrules(rid, $event)" class="subitem">{{ rs.name }} <span class="subitem-numb">{{ rs.numb }}</span></li></ul>
 	</div>
 	<div>
 		<p><b class="infoname">订阅链接</b><input name="suburl" v-model="subrurl" class="infoinput"></p>
@@ -12,30 +12,31 @@
 </template>
 
 <script>
+import { newElecId } from '../util.js'
+
 export default {
-	name: 'CompsubrsSet',
+	name: 'elecV2SetSubrs',
 	data(){
 		return {
-			subrs: this.$root.gConf.subrules,
-			rules: this.$root.gConf.routing,
+			subrs: this.$store.state.gConf.subrules,
+			rules: this.$store.state.gConf.routing,
 			subrurl: '',
 			subrname: ''
 		}
 	},
 	methods: {
-		upsubrules(event) {
+		upsubrules(rid, event) {
 			// 更新规则
 			if (confirm("从这个规则源添加新的规则？")) {
 				event.target.classList.add("waitdot")
-				let rid = event.target.id
 				let url = this.subrs[rid].surl
-				var vm = this, root = this.$root
-				fetch(url).then(function(res) {return res.text()}).then(function(res){
+				// var vm = this, root = this.$root
+				fetch(url).then(res=>res.text()).then(res=>{
 					res = res.split("\n")
-					let leng = vm.push(res)
-					vm.$set(vm.subrs[rid], 'numb', leng)
-					root.saveGconf()
-					root.alertElec("添加规则条数： " + leng)
+					let leng = this.push(res)
+					this.$set(this.subrs[rid], 'numb', leng)
+					this.$store.commit('saveGconf')
+					this.$elecV2Alert("添加规则条数： " + leng)
 					event.target.style.background = "#fff"
 					event.target.classList.remove("waitdot")
 				})
@@ -44,9 +45,9 @@ export default {
 		addSuburl() {
 			// 添加订阅链接
 			if (this.subrurl && this.subrname) {
-				let sid = this.$root.newElecId()
+				let sid = newElecId()
 				this.$set(this.subrs, sid, {name: this.subrname, surl: this.subrurl, numb: 0})
-				this.$root.saveGconf()
+				this.$store.commit('saveGconf')
 				this.$elecV2Alert("新的订阅已保存")
 			} else {
 				this.$elecV2Alert("输入不能为空")

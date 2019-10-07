@@ -1,12 +1,12 @@
 <template>
-<div id="advanSetInfo">
+<div class="advanSetInfo">
 	<div class="wzborder"><span class="wzborder_mtitle">特殊参数设置</span>
-		<p><b class="infoname">MUX</b><input type="checkbox" name="mux" v-model="outBset.mux"><b class="infoname infoname_long">concurrency</b><input name="concurrency" v-model="outBset.concurrency" placeholder="1-1024" class="infoinput infoinput_two"></p>
-		<p><b class="infoname infoname_long">tcpfastopen</b><input type="checkbox" name="tcpfastopen" v-model="outBset.tcpfastopen"><b class="infoname">TLS</b><select name="tls" v-model="outBset.tls" class="infoinput infoinput_two">
+		<p><b class="infoname">MUX</b><input class="infoinput_checkbox" type="checkbox" name="mux" v-model="outBset.mux"><b class="infoname infoname_long">concurrency</b><input name="concurrency" v-model="outBset.concurrency" placeholder="1-1024" class="infoinput infoinput_two"></p>
+		<p><b class="infoname infoname_long">tcpfastopen</b><input class="infoinput_checkbox" type="checkbox" name="tcpfastopen" v-model="outBset.tcpfastopen"><b class="infoname">TLS</b><select name="tls" v-model="outBset.tls" class="infoinput infoinput_two">
 				<option>none</option>
 				<option>tls</option>
 			</select></p>
-		<p><b class="infoname infoname_long">allowInsecure</b><input type="checkbox" name="allowInsecure" v-model="outBset.allowInsecure"></p>
+		<p><b class="infoname infoname_long">allowInsecure</b><input class="infoinput_checkbox" type="checkbox" name="allowInsecure" v-model="outBset.allowInsecure"></p>
 		<p><b class="infoname infoname_long">domainStrategy</b><select name="domainStrategy" v-model="outBset.domainStrategy" class="infoinput infoinput_middle">
 				<option>AsIs</option>
 				<option>IPIfNonMatch</option>
@@ -40,7 +40,7 @@
 		<p><b class="infoname">tti</b><input name='tti' v-model='outBset.kcp[1]' placeholder='传输时间间隔 10 - 100' class="infoinput"></p>
 		<p><b class="infoname infoname_long">ulinkCapacity</b><input name='uplinkCapacity' v-model='outBset.kcp[2]' placeholder='上行链路容量，单位 MB/s' class="infoinput infoinput_middle"></p>
 		<p><b class="infoname infoname_long">dlinkCapacity</b><input name='downlinkCapacity' v-model='outBset.kcp[3]' placeholder='下行链路容量，单位 MB/s' class="infoinput infoinput_middle"></p>
-		<p><b class="infoname infoname_long">congestion</b><input type="checkbox" name="congestion" v-model="outBset.kcp[4]"><b class="infoname">伪装类型</b><select v-model="outBset.kcp[7]" name="type" class="infoinput infoinput_two">
+		<p><b class="infoname infoname_long">congestion</b><input class="infoinput_checkbox" type="checkbox" name="congestion" v-model="outBset.kcp[4]"><b class="infoname">伪装类型</b><select v-model="outBset.kcp[7]" name="type" class="infoinput infoinput_two">
 				<option>none</option>
 				<option>srtp</option>
 				<option>utp</option>
@@ -56,17 +56,17 @@
 
 <script>
 export default {
-	name: 'CompadvanSet',
+	name: 'elecV2SetAdvan',
 	data(){
 		return {
-			outBset: this.$root.gConf.outBset
+			outBset: this.$store.state.gConf.outBset
 		}
 	},
 	methods: {
 		saveadvanSet(){
 			this.outBset.concurrency = Number(this.outBset.concurrency)
 			if ((this.outBset.outborder[0] == this.outBset.outborder[1]) || (this.outBset.routorder[0] == this.outBset.routorder[1])) {
-				this.$root.alertElec("出站或路由规则请不要选择相同值")
+				this.$elecV2Alert("出站或路由规则请不要选择相同值")
 				return
 			}
 			for (let v of ["direct", "block", "proxy"]) {
@@ -80,17 +80,15 @@ export default {
 			this.outBset.kcp[5] = Number(this.outBset.kcp[5]) || 2
 			this.outBset.kcp[6] = Number(this.outBset.kcp[6]) || 2
 
-			this.$root.saveGconf()
-			this.$root.alertElec("保存成功")
+			this.$store.commit('saveGconf')
+			this.$elecV2Alert("保存成功")
 		}
 	}
 }
 </script>
 
-<style>
-input[type=checkbox], input[type=checkbox] {margin-right: 40px}
-
-.csoutbset p select {
+<style scoped>
+.csoutbset .infoinput {
   margin-right: 68px;
 }
 </style>

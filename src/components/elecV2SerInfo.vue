@@ -4,7 +4,7 @@
 	<div class='info wzborder'>
 		<p><b class="infoname">地址</b><input name='address' placeholder='服务器地址' v-model='serjson.address' class="infoinput infoinput_address"><span> : </span><input name='port' placeholder='端口' v-model='serjson.port' class="infoinput infoinput_short"></p>
 		<div v-if="serjson.protocol=='vmess'">
-			<p><b class="infoname">UUID</b><textarea name='id' placeholder='合法的 UUID 值' v-model="serjson.id" class="infoinput"></textarea></p>
+			<p><b class="infoname">UUID</b><textarea name='id' placeholder='合法的 UUID 值' v-model="serjson.id" class="infoinput infoinput_textarea"></textarea></p>
 			<p><b class="infoname">加密方式</b><select name="security" v-model="serjson.security" class="infoinput">
 					<option value="auto">auto</option>
 					<option value="aes-128-gcm">aes-128-gcm</option>
@@ -33,7 +33,7 @@
 				</select></p>
 		</div>
 		<div v-else-if="serjson.network=='h2' || serjson.network=='ws'" class="httpSettings">
-			<p><b class="infoname">伪装域名</b><textarea name='hosts' placeholder='123.com,exp.com,...' v-model="serjson.host" class="infoinput"></textarea></p>
+			<p><b class="infoname">伪装域名</b><textarea name='hosts' placeholder='123.com,exp.com,...' v-model="serjson.host" class="infoinput infoinput_textarea"></textarea></p>
 		</div>
 		<div v-else-if="serjson.network=='quic'" class="quicSettings">
 			<p><b class="infoname">security</b><select name="quicsecurity" v-model="serjson.quicsecurity" class="infoinput">
@@ -64,15 +64,17 @@
 </template>
 
 <script>
+import { putFile } from '../util.js'
 import { getQrBase64 } from 'jr-qrcode'
 import { Base64 } from 'js-base64'
 
 export default {
-	name: "CompSerInfo",
+	name: "elecV2SerInfo",
 	props: ["slcser"],
 	data(){
 		return {
-			serlists: this.$root.gConf.serlists
+			gConf: this.$store.state.gConf,
+			serlists: this.$store.state.gConf.serlists
 		}
 	},
 	computed: {
@@ -88,11 +90,11 @@ export default {
 	methods: {
 		update(){
 			let surl = (this.serjson.protocol=='shadowsocks'?"ss://":"vmess://") + Base64.encodeURI(JSON.stringify(this.serjson))
-			this.$root.gConf.serlists[this.slcser].surl = surl
-			this.$root.gConf.serlists[this.slcser].name = this.serjson.name
-			this.$root.gConf.serlists[this.slcser].address = this.serjson.address
-			this.$root.saveGconf()
-			alert("成功更新服务器 " + this.serjson.name)
+			this.serlists[this.slcser].surl = surl
+			this.serlists[this.slcser].name = this.serjson.name
+			this.serlists[this.slcser].address = this.serjson.address
+			this.$store.commit('saveGconf')
+			this.$elecV2Alert("成功更新服务器 " + this.serjson.name)
 		},
 		evurlToJson(url) {
 			// 自定义的 vmess 转化为 json
@@ -103,30 +105,30 @@ export default {
 		toInbobj() {
 			// 生成 inbounds obj
 			let inb = []
-			inb[0] = {"protocol": "socks", "port": this.$root.gConf.inbound.sport || 10806}
-			inb[1] = {"protocol": "http", "port": this.$root.gConf.inbound.hport || 1081}
+			inb[0] = {"protocol": "socks", "port": this.gConf.inbound.sport || 10806}
+			inb[1] = {"protocol": "http", "port": this.gConf.inbound.hport || 1081}
 			return inb
 		},
 		serToConfig(sTag) {
 			// 通过服务器生成 config.json 文件
-			let config = {"log":{}, "dns": {}, "inbounds":[], "outbounds": [], "routing": {"domainStrategy": this.$root.gConf.outBset.domainStrategy || "AsIs", "rules": []}}
-			config.log = this.$root.gConf.log
-			config.dns.servers = this.$root.gConf.dns
+			let config = {"log":{}, "dns": {}, "inbounds":[], "outbounds": [], "routing": {"domainStrategy": this.gConf.outBset.domainStrategy || "AsIs", "rules": []}}
+			config.log = this.gConf.log
+			config.dns.servers = this.gConf.dns
 			config["inbounds"] = this.toInbobj()
-			config["outbounds"][this.$root.gConf.outBset.outborder.indexOf("proxy")] = this.surlToOutbobj(this.$root.gConf.serlists[sTag].surl)
-			config["outbounds"][this.$root.gConf.outBset.outborder.indexOf("proxy")].tag = "proxy"
-			config["outbounds"][this.$root.gConf.outBset.outborder.indexOf("direct")] = {"tag": "direct","protocol": "freedom"}
-			config["outbounds"][this.$root.gConf.outBset.outborder.indexOf("block")] = {"tag": "block","protocol": "blackhole"}
+			config["outbounds"][this.gConf.outBset.outborder.indexOf("proxy")] = this.surlToOutbobj(this.gConf.serlists[sTag].surl)
+			config["outbounds"][this.gConf.outBset.outborder.indexOf("proxy")].tag = "proxy"
+			config["outbounds"][this.gConf.outBset.outborder.indexOf("direct")] = {"tag": "direct","protocol": "freedom"}
+			config["outbounds"][this.gConf.outBset.outborder.indexOf("block")] = {"tag": "block","protocol": "blackhole"}
 			config.routing.rules = this.toConfRules()
-			this.$root.putFile(JSON.stringify(config))
+			putFile(JSON.stringify(config))
 		},
 		surlToOutbobj(surl) {
 			// 通过 vmess:// 或者 ssr:// 生成 outbounbs 信息
 			let outbObj = {"settings": {}}
 			let vmser = this.evurlToJson(surl)
 			outbObj.protocol = vmser.protocol
-			outbObj.streamSettings = {"network": vmser.network, "security": this.$root.gConf.outBset.tls, "tlsSettings": {"allowInsecure": this.$root.gConf.outBset.allowInsecure}, "sockopt": {"tcpFastOpen": this.$root.gConf.outBset.tcpfastopen}}
-			outbObj.mux = {"enabled": this.$root.gConf.outBset.mux, "concurrency": this.$root.gConf.outBset.concurrency}
+			outbObj.streamSettings = {"network": vmser.network, "security": this.gConf.outBset.tls, "tlsSettings": {"allowInsecure": this.gConf.outBset.allowInsecure}, "sockopt": {"tcpFastOpen": this.gConf.outBset.tcpfastopen}}
+			outbObj.mux = {"enabled": this.gConf.outBset.mux, "concurrency": this.gConf.outBset.concurrency}
 			if (outbObj.protocol == "vmess") {
 				outbObj.settings.vnext = [{"address": vmser.add || vmser.address, "port": Number(vmser.port), "users": [{"id": vmser.id, "alterId": typeof(vmser.aid)!="undefined"?Number(vmser.aid):4, "security": vmser.security || "auto"}]}]
 				switch (vmser.network ) {
@@ -137,7 +139,7 @@ export default {
 						}
 						break
 					case "kcp":
-						vmser.kcp = this.$root.gConf.outBset.kcp || vmser.kcp || []
+						vmser.kcp = this.gConf.outBset.kcp || vmser.kcp || []
 						outbObj.streamSettings.kcpSettings = {"mtu": vmser.kcp[0], "tti": vmser.kcp[1], "uplinkCapacity": vmser.kcp[2], "downlinkCapacity": vmser.kcp[3], "congestion": vmser.kcp[4], "readBufferSize": vmser.kcp[5], "writeBufferSize": vmser.kcp[6], "header": {"type": vmser.type || "none"}}
 						break
 					case "ws":
@@ -158,14 +160,14 @@ export default {
 		},
 		toConfRules() {
 			let rdomain = {"proxy": [], "direct": [], "block": []}, rip = {"proxy": [], "direct": [], "block": []}
-			this.$root.gConf.routing.forEach(rl=>{
+			this.gConf.routing.forEach(rl=>{
 				let rule = rl.replace(/\s/g, '').split(",")
 				if (rule[0] == "key") rdomain[rule[2]].push(rule[1])
 				else if (rule[0] == "domain") rdomain[rule[2]].push("domain:"+rule[1])
 				else if (rule[0] == "ip") rip[rule[2]].push(rule[1])
 			})
 			let rules = []
-			let routorder = this.$root.gConf.outBset.routorder
+			let routorder = this.gConf.outBset.routorder
 			if (rdomain[routorder[0]].length>0) rules.push({"type": "field", "outboundTag": routorder[0], "domain": rdomain[routorder[0]]})
 			if (rip[routorder[0]].length>0) rules.push({"type": "field", "outboundTag": routorder[0], "ip": rip[routorder[0]]})
 			if (rdomain[routorder[1]].length>0) rules.push({"type": "field", "outboundTag": routorder[1], "domain": rdomain[routorder[1]]})

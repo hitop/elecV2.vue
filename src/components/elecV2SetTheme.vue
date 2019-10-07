@@ -28,14 +28,16 @@
 </template>
 
 <script>
+import { newElecId } from '../util.js'
+
 export default {
-	name: 'CompthemeSet',
+	name: 'elecV2SetTheme',
 	data(){
 		return {
 			active: false,
 			newname: '未命名主题',
-			evset: this.$root.gConf.evset,
-			theme: this.$root.gConf.theme,
+			evset: this.$store.state.gConf.evset,
+			theme: this.$store.state.gConf.theme,
 			minputcs: this.$root.themecl
 		}
 	},
@@ -55,12 +57,12 @@ export default {
 			if (tid) {
 				this.theme[tid].name = this.newname
 			}	else {
-				tid = this.$root.newElecId()
+				tid = newElecId()
 				let scobj = {"name": this.newname, "colorsc": this.minputcs}
 				this.$set(this.theme, tid, scobj)
 			}
 			this.evset.activetheme = tid
-			this.$root.saveGconf()
+			this.$store.commit('saveGconf')
 			this.$elecV2Alert("成功设置默认主题：" + this.newname)
 		},
 		manualSc() {
@@ -75,7 +77,7 @@ export default {
 		deltheme(tid) {
 			if (confirm("确定删除此主题？")) {
 				this.$delete(this.theme, tid)
-				this.$root.saveGconf()
+				this.$store.commit('saveGconf')
 			}
 		},
 		randChex(ra=256, rb=256, rc=256) {
