@@ -34,9 +34,9 @@ new Vue({
   created() {
     store.commit('getGconf')
     if (store.state.gConf.evset.activetheme && store.state.gConf.theme[store.state.gConf.evset.activetheme])  {
-      this.themecl = store.state.gConf.theme[store.state.gConf.evset.activetheme].colorsc
+      this.themecl = store.state.gConf.theme[store.state.gConf.evset.activetheme].colorsc.map(r=>r)
     } else {
-      this.themecl = store.state.gConf.theme.e73Ue.colorsc
+      this.themecl = store.state.gConf.theme.e73Ue.colorsc.map(r=>r)
     }
   }
 }).$mount('#elecV2')
