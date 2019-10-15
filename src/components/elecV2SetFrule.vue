@@ -72,7 +72,7 @@ export default {
   methods: {
     ruleres() {
       let re = {direct: "直连", block: "阻止", proxy: "代理"}
-      for (let i=0; i<=this.rules.length; i++){
+      for (let i=0; i<this.rules.length; i++) {
         let r = this.rules[i].split(",")
         if (RegExp(r[1]).test(this.ruleresults)) {
           return re[r[2]]
