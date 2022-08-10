@@ -1,12 +1,17 @@
 <template>
-  <div class="settoggle" @click="$emit('set-toggle')">
+  <div class="settoggle" :class="{ 'settoggle--active': active }" @click="$emit('set-toggle');active=!active">
     <span class="cslittlebutton icon-menu"></span>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'elecV2Toggle'
+  name: 'elecV2Toggle',
+  data(){
+    return {
+      active: false
+    }
+  }
 }
 </script>
 
@@ -26,7 +31,9 @@ export default {
   padding: 4px;
   z-index: 99;
 }
-
+.settoggle--active {
+  background: var(--themecl-two);
+}
 .settoggle:hover {  }
 
 .icon-menu::before {
