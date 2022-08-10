@@ -52,7 +52,7 @@ export default {
     return {
       serlists: this.$store.state.gConf.serlists,
       group: this.$store.state.gConf.group,
-      addsurl: '',
+      addsurl: 'vmess://eyJhZGQiOiIxMjcuMC4wLjEiLCJ2IjoiMiIsInBvcnQiOjgwMDAsImlkIjoiMDU1OWRiZTAtOTg1NC00OGZiLThmZTgtMDAwZTdkN2U0YmExIiwiYWlkIjoiMCIsInR5cGUiOiIiLCJob3N0IjoiIiwicGF0aCI6Ii9lbGVjVjIiLCJ0bHMiOiJub25lIiwibmV0d29yayI6InRjcCIsInByb3RvY29sIjoidm1lc3MiLCJuYW1lIjoi6IqC54K5IERlbW8iLCJhZGRyZXNzIjoiMTI3LjAuMC4xIiwibGV2ZWwiOjAsInNlY3VyaXR5IjoiYXV0byJ9',
       addname: '',
       addgroup: 'none',
       addSershow: true,

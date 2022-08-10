@@ -58,12 +58,13 @@ export default {
 </script>
 
 <style>
-html, body { 
+html, body {
+  width: 960px;
   padding: 0;
-  margin: 0;
+  margin: auto;
   background: transparent;
   overflow-x: hidden;
-  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
   font-family: Microsoft YaHei UI,Consolas,Arial,sans-serif;
 }
 ul { list-style: none;padding-left: 0; margin: 0 }
